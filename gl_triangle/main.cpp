@@ -6,6 +6,9 @@
 #include <sstream>
 #include <string>
 #include <math.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Shader.h"
 
@@ -22,8 +25,8 @@ int main()
 
     glewInit();
     
-    Shader shader1("../shader.vert", "../shader.frag");
-    Shader shader2("../shader2.vert", "../shader2.frag");
+    Shader shader1("shader.vert", "shader.frag");
+    Shader shader2("shader2.vert", "shader2.frag");
 
     // Set up vertex data (and buffer(s)) and attribute pointers
     GLfloat vertices[] = {
@@ -54,32 +57,32 @@ int main()
     };
 
     int width, height;
-    unsigned char* image = SOIL_load_image("../container.jpg", &width, &height, 0, SOIL_LOAD_RGB);
+    unsigned char* image = SOIL_load_image("container.jpg", &width, &height, 0, SOIL_LOAD_RGB);
 
     GLuint texture;
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
     glGenerateMipmap(GL_TEXTURE_2D);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    float borderColor[] = { 1.0f, 1.0f, 0.0f, 1.0f };
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); 
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    //float borderColor[] = { 1.0f, 1.0f, 0.0f, 1.0f };
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); 
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); 
 
     SOIL_free_image_data(image);
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    image = SOIL_load_image("../awesomeface.png", &width, &height, 0, SOIL_LOAD_RGB);
+    image = SOIL_load_image("awesomeface.png", &width, &height, 0, SOIL_LOAD_RGB);
     GLuint texture2;
     glGenTextures(1, &texture2);
     glBindTexture(GL_TEXTURE_2D, texture2);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
     glGenerateMipmap(GL_TEXTURE_2D);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); 
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); 
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); 
 
     SOIL_free_image_data(image);
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -128,7 +131,11 @@ int main()
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
+
+    
     GLfloat factor = 0.0f;
+
+    sf::Clock clock;
 
     while (window.isOpen())
     {
@@ -167,9 +174,20 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Draw our first triangle
+
+        //GLM
+        glm::mat4 trans(1.0f);
+        trans = glm::rotate(trans, glm::radians(clock.getElapsedTime().asSeconds()*10), glm::vec3(0.0f, 0.0f, 0.1f));
+        trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
         
+        glm::mat4 trans2(1.0f);
         
-        //std::cout << green << std::endl;
+        GLfloat scale = (sin(clock.getElapsedTime().asSeconds()) + 2.0f) / 3.0f;
+        trans2 = glm::scale(trans2, glm::vec3(scale));
+        trans2 = glm::translate(trans2, glm::vec3(-0.5f, 0.5f, 0.0f));
+        //trans2 = glm::scale(trans2, glm::vec3(scale));
+
+
         shader1.Use();
 
         glActiveTexture(GL_TEXTURE0);
@@ -182,7 +200,12 @@ int main()
 
         glUniform1f(glGetUniformLocation(shader1.getProgram(), "factor"), factor);
 
+        glUniformMatrix4fv(glGetUniformLocation(shader1.getProgram(), "transform"), 1, GL_FALSE, glm::value_ptr(trans)); 
+
         glBindVertexArray(VAO);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+        glUniformMatrix4fv(glGetUniformLocation(shader1.getProgram(), "transform"), 1, GL_FALSE, glm::value_ptr(trans2));
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         //glDrawArrays(GL_TRIANGLES, 0, 6);
         glBindVertexArray(0);

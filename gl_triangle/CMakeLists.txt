@@ -8,6 +8,7 @@ find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 
+
 file(GLOB SOURCES *.h *.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
