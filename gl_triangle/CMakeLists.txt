@@ -8,6 +8,8 @@ find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 
-add_executable(${PROJECT_NAME} main.cpp)
+file(GLOB SOURCES *.h *.cpp)
 
-target_link_libraries(glTriangle sfml-graphics sfml-audio ${OPENGL_LIBRARY} ${GLEW_LIBRARY})
+add_executable(${PROJECT_NAME} ${SOURCES})
+
+target_link_libraries(glTriangle sfml-graphics sfml-audio SOIL ${OPENGL_LIBRARY} ${GLEW_LIBRARY})
