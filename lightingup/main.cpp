@@ -33,53 +33,54 @@ int main()
 
     glewInit();
     
-    Shader shader1("../shader.vert", "../shader.frag");
-    Shader shader2("../shader2.vert", "../shader2.frag");
+    Shader shader("../shader.vert", "../shader.frag");
 
     // Set up vertex data (and buffer(s)) and attribute pointers
     GLfloat vertices[] = {
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+        //coordinate            //texture coordinate
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
 
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
 
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-};
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+    };
+
     GLuint indices[] = {  // Note that we start from 0!
         0, 1, 3, // First Triangle
         1, 2, 3  // Second Triangle
@@ -142,46 +143,22 @@ int main()
     //тест глубины для нормального отображения полигонов
     glEnable(GL_DEPTH_TEST);
 
-    glm::vec3 cubePositions[] = {
-        glm::vec3( 0.0f,  0.0f, -50.0f), 
-        glm::vec3( 2.0f,  5.0f, -15.0f), 
-        glm::vec3(-1.5f, -2.2f, -2.5f),  
-        glm::vec3(-3.8f, -2.0f, -12.3f),  
-        glm::vec3( 2.4f, -0.4f, -3.5f),  
-        glm::vec3(-1.7f,  3.0f, -7.5f),  
-        glm::vec3( 1.3f, -2.0f, -2.5f),  
-        glm::vec3( 1.5f,  2.0f, -2.5f), 
-        glm::vec3( 1.5f,  0.2f, -1.5f), 
-        glm::vec3(-1.3f,  1.0f, -1.5f)  
-    };
-    
-    glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f,  3.0f);
-    glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-    glm::vec3 cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
-    GLfloat camSpeed = 0.05f;
-
     GLfloat factor = 0.0f;
-
-    sf::Clock clock;
 
     bool keys[sf::Keyboard::KeyCount] = {false};
 
     window.setMouseCursorVisible(false);
     window.setMouseCursorGrabbed(true);
 
-    int mouseX = window.getSize().x / 2;
-    int mouseY = window.getSize().y / 2;
-    GLfloat shiftX = 0;
-    GLfloat shiftY = 0;
-
-    Camera cam;
+    Camera cam(glm::vec3(0.0f), Camera::FLY);
 
     sf::Vector2i center(window.getSize().x / 2, window.getSize().y / 2);
     sf::Vector2i mouse;
 
+    sf::Clock clock;
+
     while (window.isOpen())
     {
-        GLfloat start = clock.getElapsedTime().asSeconds();
         sf::Event event;
         
         while (window.pollEvent(event))
@@ -207,7 +184,7 @@ int main()
 
         mouse = sf::Mouse::getPosition(window);
         cam.rotate(mouse - center);
-        sf::Mouse::setPosition(center);
+        sf::Mouse::setPosition(center, window);
 
         cam.handle(keys);
 
@@ -219,38 +196,25 @@ int main()
         glm::mat4 projection;
         projection = glm::perspective(glm::radians(45.0f), (float)window.getSize().x / window.getSize().y, 0.1f, 100.0f);
 
-        sf::Mouse::setPosition(sf::Vector2i(window.getSize().x / 2,
-                               window.getSize().y / 2), window);
-
-        shader1.Use();
+        shader.Use();
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture);
-        glUniform1i(glGetUniformLocation(shader1.getProgram(), "fsTexture"), 0);
-        
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, texture2);
-        glUniform1i(glGetUniformLocation(shader1.getProgram(), "fsTexture2"), 1);
-
-        glUniform1f(glGetUniformLocation(shader1.getProgram(), "factor"), factor);
-
-         
-        glUniformMatrix4fv(glGetUniformLocation(shader1.getProgram(), "view"), 1, GL_FALSE, glm::value_ptr(cam.View()));
-        glUniformMatrix4fv(glGetUniformLocation(shader1.getProgram(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+        glUniform1i(glGetUniformLocation(shader.getProgram(), "fsTexture"), 0);
+                
+        glUniformMatrix4fv(glGetUniformLocation(shader.getProgram(), "view"), 1, GL_FALSE, glm::value_ptr(cam.View()));
+        glUniformMatrix4fv(glGetUniformLocation(shader.getProgram(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
         glBindVertexArray(VAO);
         //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-        for(GLuint i = 0; i < 10; i++)
-        {
-            glm::mat4 model(1.0f);
-            model = glm::translate(model, cubePositions[i]);
-            GLfloat angle = clock.getElapsedTime().asSeconds()*50.0f + 20.0f * i; 
-            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-            glUniformMatrix4fv(glGetUniformLocation(shader1.getProgram(), "model"), 1, GL_FALSE, glm::value_ptr(model));
-            glDrawArrays(GL_TRIANGLES, 0, 36);
-        }
+        glm::mat4 model(1.0f);
+        model = glm::translate(model, glm::vec3( 0.0f,  0.0f, 0.0f));
+        GLfloat angle = clock.getElapsedTime().asSeconds()*50.0f; 
+        //model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+        glUniformMatrix4fv(glGetUniformLocation(shader.getProgram(), "model"), 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, 36);
         
         glBindVertexArray(0);
         
