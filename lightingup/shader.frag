@@ -1,14 +1,11 @@
 #version 330 core
 
-in vec2 fsTexCoord;
-
 out vec4 color;
 
-uniform sampler2D fsTexture;
-uniform sampler2D fsTexture2;
-uniform float factor;
+uniform vec3 objectColor;
+uniform vec3 lightColor;
 
 void main()
 {
-	color = mix(texture(fsTexture, fsTexCoord), texture(fsTexture2, fsTexCoord), factor);
+	color = vec4(lightColor * objectColor, 1.0f);
 }

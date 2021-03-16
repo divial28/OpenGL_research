@@ -1,6 +1,9 @@
 #include "Shader.h"
 
-Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
+Shader::Shader(Camera* camera, const GLchar* vertexPath, const GLchar* fragmentPath)
+    : camera(camera)
+    , viewName("view")
+    , projectionName("projection")
 {
     
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -31,6 +34,8 @@ Shader::~Shader()
 void Shader::Use()
 {
     glUseProgram(program);
+    uniform(viewName.c_str(), camera->View());
+    uniform(projectionName.c_str(), camera->Projection());
 }
 
 const GLchar* const* Shader::readSource(const GLchar* sourcePath)

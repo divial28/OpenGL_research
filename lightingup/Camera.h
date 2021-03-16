@@ -16,11 +16,13 @@ public:
         FPS
     };
 
-    Camera(const glm::vec3 position, Mode mode);
+    Camera(sf::Window* window
+           , glm::vec3 position = glm::vec3(0.0f)
+           , Mode mode = FLY);
 
-    void handle(bool* keys);
+    void handle();
 
-    void rotate(const sf::Vector2i& dir);
+    void rotate();
 
     void moveForward();
 
@@ -34,10 +36,17 @@ public:
 
     const glm::mat4& View();
 
-    void setMode(Mode new_mode);
+    const glm::mat4& Projection();
+
+    void setMode(Mode newMode);
+
+    void setFOV(GLfloat degrees);
+
+    void setKeys(bool* array);
 
 private:
     glm::mat4   view;
+    glm::mat4   projection;
 
     glm::vec3   position;
     glm::vec3   front;
@@ -51,7 +60,13 @@ private:
     GLfloat     rotation;
     GLfloat     sensitivity;
 
+    GLfloat     FOV;
+
     Mode        mode;
+
+    bool        * keys;
+
+    sf::Window  * window;
 };
 
 #endif

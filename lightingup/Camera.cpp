@@ -1,7 +1,9 @@
 #include "Camera.h"
 
-Camera::Camera(const glm::vec3 position, Mode mode)
-    : view(1.0f)
+Camera::Camera(sf::Window* window, glm::vec3 position, Mode mode)
+    : window(window)
+    , view(1.0f)
+    , projection(1.0f)
     , position(position)
     , front(0.0f, 0.0f, -1.0f)
     , up(0.0f, 1.0f, 0.0f)
@@ -9,13 +11,14 @@ Camera::Camera(const glm::vec3 position, Mode mode)
     , pitch(0.0f)
     , yaw(-90.0f)
     , sensitivity(0.03f)
+    , FOV(glm::radians(45.0f))
     , speed(0.05f)
     , mode(mode)
 {
 
 }
 
-void Camera::handle(bool* keys)
+void Camera::handle()
 {
     if(keys[sf::Keyboard::W])
         moveForward();
@@ -25,21 +28,22 @@ void Camera::handle(bool* keys)
         moveLeft();
     if(keys[sf::Keyboard::D])
         moveRight();
-
-    update();
 }
 
-void Camera::rotate(const sf::Vector2i& dir)
+void Camera::rotate()
 {
-    yaw += dir.x * sensitivity;
-    pitch -= dir.y * sensitivity;
+    sf::Vector2i shift = sf::Mouse::getPosition(*window);
+    sf::Vector2i center(window->getSize().x / 2, window->getSize().y / 2);
+    shift -= center;
+    sf::Mouse::setPosition(center, *window);
 
-    /*
+    yaw += shift.x * sensitivity;
+    pitch -= shift.y * sensitivity;
+
     if(pitch > 89.0f)
-    pitch =  89.0f;
+        pitch =  89.0f;
     if(pitch < -89.0f)
-    pitch = -89.0f;
-    */
+        pitch = -89.0f;
 
     front.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw)); 
     front.y = sin(glm::radians(pitch));
@@ -75,8 +79,11 @@ void Camera::moveRight()
 
 void Camera::update()
 {
-    //glm::lookAt()
+    handle();
+    rotate();
+
     view = glm::lookAt(position, position + front, up);
+    projection = glm::perspective(FOV, (float)window->getSize().x / window->getSize().y, 0.1f, 100.0f);
 }
 
 const glm::mat4& Camera::View()
@@ -84,7 +91,22 @@ const glm::mat4& Camera::View()
     return view;
 }
 
+const glm::mat4& Camera::Projection()
+{
+    return projection;
+}
+
 void Camera::setMode(Mode new_mode)
 {
     mode = new_mode;
+}
+
+void Camera::setFOV(GLfloat degrees)
+{
+    FOV = glm::radians(degrees);
+}
+
+void Camera::setKeys(bool* array)
+{
+    keys = array;
 }
