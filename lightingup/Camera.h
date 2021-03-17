@@ -32,11 +32,17 @@ public:
 
     void moveRight();
 
+    void moveDown();
+
+    void moveUp();
+
     void update();
 
     const glm::mat4& View();
 
     const glm::mat4& Projection();
+
+    const glm::vec3& Position();
 
     void setMode(Mode newMode);
 

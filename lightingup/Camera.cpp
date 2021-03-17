@@ -28,6 +28,10 @@ void Camera::handle()
         moveLeft();
     if(keys[sf::Keyboard::D])
         moveRight();
+    if(keys[sf::Keyboard::E])
+        moveUp();
+    if(keys[sf::Keyboard::Q])
+        moveDown();
 }
 
 void Camera::rotate()
@@ -77,6 +81,16 @@ void Camera::moveRight()
     position += glm::normalize(glm::cross(direction, up)) * speed;
 }
 
+void Camera::moveUp()
+{
+    position.y += speed;
+}
+
+void Camera::moveDown()
+{
+    position.y -= speed;
+}
+
 void Camera::update()
 {
     handle();
@@ -94,6 +108,11 @@ const glm::mat4& Camera::View()
 const glm::mat4& Camera::Projection()
 {
     return projection;
+}
+
+const glm::vec3& Camera::Position()
+{
+    return position;
 }
 
 void Camera::setMode(Mode new_mode)
