@@ -115,6 +115,11 @@ const glm::vec3& Camera::Position()
     return position;
 }
 
+const glm::vec3& Camera::Direction()
+{
+    return direction;
+}
+
 void Camera::setMode(Mode new_mode)
 {
     mode = new_mode;

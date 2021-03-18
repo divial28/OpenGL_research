@@ -44,6 +44,8 @@ public:
 
     const glm::vec3& Position();
 
+    const glm::vec3& Direction();
+
     void setMode(Mode newMode);
 
     void setFOV(GLfloat degrees);
