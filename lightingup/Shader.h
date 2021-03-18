@@ -31,6 +31,12 @@ public:
     void setProjectionTransformName(const char* name)
         { projectionName = name; }
 
+    void uniform(const char* name, GLfloat value)
+        { glUniform1f(glGetUniformLocation(program, name), value); }
+
+    void uniform(const char* name, GLint textureIndex)
+        { glUniform1i(glGetUniformLocation(program, name), textureIndex); }
+
     void uniform(const char* name, const glm::vec3& vector) 
         { glUniform3f(glGetUniformLocation(program, name), vector.x, vector.y, vector.z); }
 
