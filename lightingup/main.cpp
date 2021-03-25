@@ -156,21 +156,6 @@ int main()
     SOIL_free_image_data(image);
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    // Load texture 3
-    image = SOIL_load_image("../emission.jpg", &width, &height, 0, SOIL_LOAD_RGB);
-    
-    if(!image)
-        std::cout << "unable to load image" << std::endl;
-
-    GLuint texture3;
-    glGenTextures(1, &texture3);
-    glBindTexture(GL_TEXTURE_2D, texture3);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-    glGenerateMipmap(GL_TEXTURE_2D);
-    
-    SOIL_free_image_data(image);
-    glBindTexture(GL_TEXTURE_2D, 0);
-
     //glPolygonMode(GL_FRONT, GL_TRIANGLES);
 
     //тест глубины для нормального отображения полигонов
@@ -269,14 +254,14 @@ int main()
         }
 
         glm::vec3 camPos = cam.View()*glm::vec4(cam.Position(), 1.0f);
-        glm::vec3 camDir = cam.View()*glm::vec4(cam.Direction(), 1.0f);
-        shader.uniform("projectedLight.position", cam.Position());
-        shader.uniform("projectedLight.direction", cam.Direction());
+        glm::vec3 camDir = glm::normalize(cam.View()*glm::vec4(cam.Direction(), 0.0f));
+        shader.uniform("projectedLight.position", camPos);
+        shader.uniform("projectedLight.direction", camDir);
         shader.uniform("projectedLight.ambient", ambientColor);
         shader.uniform("projectedLight.diffuse", diffuseColor);
         shader.uniform("projectedLight.specular",glm::vec3(1.0f));
-        shader.uniform("projectedLight.cutOff", glm::radians(12.5f));
-        shader.uniform("projectedLight.cutOffOut", glm::radians(15.0f));
+        shader.uniform("projectedLight.cutOff", glm::cos(glm::radians(12.5f)));
+        shader.uniform("projectedLight.cutOffOut", glm::cos(glm::radians(17.5f)));
         shader.uniform("projectedLight.constant", 1.0f);
         shader.uniform("projectedLight.linear", 0.09f);
         shader.uniform("projectedLight.quadratic", 0.032f);
