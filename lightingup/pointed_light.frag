@@ -10,10 +10,6 @@ out vec4 color;
 
 uniform mat4 view;
 
-uniform vec3 objectColor;
-uniform vec3 lightColor;
-uniform vec3 viewPos;
-
 struct Material {
     sampler2D diffuse;
     sampler2D specular;

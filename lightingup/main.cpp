@@ -85,6 +85,13 @@ int main()
         glm::vec3(-1.3f,  1.0f, -1.5f)
     };
 
+    glm::vec4 pointLightPositions[] = {
+        glm::vec4( 0.7f,  0.2f,  2.0f, 1.0f),
+        glm::vec4( 2.3f, -3.3f, -4.0f, 1.0f),
+        glm::vec4(-4.0f,  2.0f, -12.0f, 1.0f),
+        glm::vec4( 0.0f,  0.0f, -3.0f, 1.0f)
+    };  
+
     // Setting up box VAO
     GLuint VBO, VAO;
     glGenVertexArrays(1, &VAO);
@@ -177,7 +184,7 @@ int main()
     Camera cam(&window);
     cam.setKeys(keys);
 
-    Shader shader(&cam, "../projected_light.vert", "../projected_light.frag");
+    Shader shader(&cam, "../combined_light.vert", "../combined_light.frag");
     Shader lampShader(&cam, "../lamp.vert", "../lamp.frag");
 
     sf::Vector2i center(window.getSize().x / 2, window.getSize().y / 2);
@@ -237,21 +244,43 @@ int main()
         //glActiveTexture(GL_TEXTURE2);
         //glBindTexture(GL_TEXTURE_2D, texture3); 
 
-        shader.uniform("lightColor", lightColor);
+        //shader.uniform("lightColor", lightColor);
         shader.uniform("material.diffuse", 0);  
         shader.uniform("material.specular", 1);  
         //shader.uniform("material.emission", 2);
-        shader.uniform("material.shininess", 64.0f);  
-        shader.uniform("light.ambient", ambientColor);
-        shader.uniform("light.diffuse", diffuseColor); // darken the light a bit to fit the scene
-        shader.uniform("light.specular", glm::vec3(1.0f, 1.0f, 1.0f)); 
-        shader.uniform("light.position", cam.Position());
-        shader.uniform("light.direction", cam.Direction());
-        shader.uniform("light.cutOff", glm::cos(glm::radians(12.5f)));
-        shader.uniform("light.cutOffOut", glm::cos(glm::radians(17.5f)));
-        shader.uniform("light.constatnt", 1.0f);
-        shader.uniform("light.linear", 0.09f);
-        shader.uniform("light.quadratic", 0.032f);
+        shader.uniform("material.shininess", 64.0f);
+
+        shader.uniform("dirLight.direction", cam.View()*glm::vec4(-0.1f, -0.4f, -1.4f, 0.0f));  
+        shader.uniform("dirLight.ambient", ambientColor);
+        shader.uniform("dirLight.diffuse", diffuseColor);
+        shader.uniform("dirLight.specular", glm::vec3(1.0f));
+
+        for (int i = 0; i < 4; i++)
+        {
+            std::string s("pointLights[");
+            s += std::to_string(i) + "]";
+            shader.uniform((s+".ambient").c_str(), ambientColor);
+            shader.uniform((s+".diffuse").c_str(), diffuseColor); // darken the light a bit to fit the scene
+            shader.uniform((s+".specular").c_str(), glm::vec3(1.0f));
+            shader.uniform((s+".constant").c_str(), 1.0f);
+            shader.uniform((s+".linear").c_str(), 0.09f);
+            shader.uniform((s+".quadratic").c_str(), 0.032f); 
+            shader.uniform((s+".position").c_str(), cam.View()*pointLightPositions[i]);
+        }
+
+        glm::vec3 camPos = cam.View()*glm::vec4(cam.Position(), 1.0f);
+        glm::vec3 camDir = cam.View()*glm::vec4(cam.Direction(), 1.0f);
+        shader.uniform("projectedLight.position", cam.Position());
+        shader.uniform("projectedLight.direction", cam.Direction());
+        shader.uniform("projectedLight.ambient", ambientColor);
+        shader.uniform("projectedLight.diffuse", diffuseColor);
+        shader.uniform("projectedLight.specular",glm::vec3(1.0f));
+        shader.uniform("projectedLight.cutOff", glm::radians(12.5f));
+        shader.uniform("projectedLight.cutOffOut", glm::radians(15.0f));
+        shader.uniform("projectedLight.constant", 1.0f);
+        shader.uniform("projectedLight.linear", 0.09f);
+        shader.uniform("projectedLight.quadratic", 0.032f);
+        
         shader.uniform("viewPos", cam.Position());   
 
         glBindVertexArray(VAO); 
@@ -259,8 +288,8 @@ int main()
         {
             glm::mat4 model(1.0f);
             model = glm::translate(model, cubePositions[i]);
-            float angle = 20.0f * i;
-            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+            float angle = 20.0f * i + clock.getElapsedTime().asMilliseconds()/40;
+            //model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
             shader.uniform("model", model);
 
             glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -268,16 +297,18 @@ int main()
         glBindVertexArray(0);
 
         // Rendering lamp
-        glm::mat4 model(1.0f);
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.2f, 1.0f, 0.3f));
-        model = glm::scale(model, glm::vec3(0.2f));
-        
         lampShader.Use();
-        lampShader.uniform("model", model);        
-
         glBindVertexArray(lampVAO);  
-        glDrawArrays(GL_TRIANGLES, 0, 36);        
+
+        for(int i = 0; i < 4; i++)
+        {
+            glm::mat4 model(1.0f);
+            glm::vec3 vec(pointLightPositions[i].x, pointLightPositions[i].y, pointLightPositions[i].z);
+            model = glm::translate(model, vec);
+            model = glm::scale(model, glm::vec3(0.2f));
+            lampShader.uniform("model", model);        
+            glDrawArrays(GL_TRIANGLES, 0, 36);        
+        }
         glBindVertexArray(0);
         
 
