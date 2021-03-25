@@ -219,10 +219,6 @@ int main()
         //model = glm::rotate(model, glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
 
         glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
-        //lightColor.x = sin(clock.getElapsedTime().asSeconds() * 2.0f) / 2 + 0.5;
-        //lightColor.y = sin(clock.getElapsedTime().asSeconds() * 0.7f) / 2 + 0.5;
-        //lightColor.z = sin(clock.getElapsedTime().asSeconds() * 1.3f) / 2 + 0.5;
-
         glm::vec3 diffuseColor = lightColor   * glm::vec3(0.5f); // decrease the influence
         glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); // low influence
 
@@ -237,7 +233,7 @@ int main()
         //glActiveTexture(GL_TEXTURE2);
         //glBindTexture(GL_TEXTURE_2D, texture3); 
 
-        shader.uniform("lightColor", lightColor);
+        //shader.uniform("lightColor", lightColor);
         shader.uniform("material.diffuse", 0);  
         shader.uniform("material.specular", 1);  
         //shader.uniform("material.emission", 2);

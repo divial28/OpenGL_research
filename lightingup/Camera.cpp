@@ -12,7 +12,7 @@ Camera::Camera(sf::Window* window, glm::vec3 position, Mode mode)
     , yaw(-90.0f)
     , sensitivity(0.03f)
     , FOV(glm::radians(45.0f))
-    , speed(0.05f)
+    , speed(0.001f)
     , mode(mode)
 {
 
