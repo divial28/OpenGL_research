@@ -20,7 +20,6 @@ struct Material {
 	sampler2D emission;
     float shininess;
 };
-
 uniform Material material;
 
 struct Light {
