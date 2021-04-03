@@ -38,6 +38,8 @@ public:
 
     void update();
 
+    void changeCursorCapchure();
+
     const glm::mat4& View();
 
     const glm::mat4& Projection();
@@ -73,6 +75,7 @@ private:
     Mode        mode;
 
     bool        * keys;
+    bool        cursorCapchure;
 
     sf::Window  * window;
 };

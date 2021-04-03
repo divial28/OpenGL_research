@@ -10,12 +10,13 @@ Camera::Camera(sf::Window* window, glm::vec3 position, Mode mode)
     , rotation(0.0f)
     , pitch(0.0f)
     , yaw(-90.0f)
-    , sensitivity(0.03f)
+    , sensitivity(0.05f)
     , FOV(glm::radians(45.0f))
-    , speed(0.001f)
+    , speed(0.05f)
     , mode(mode)
+    , cursorCapchure(false)
 {
-
+    changeCursorCapchure();
 }
 
 void Camera::handle()
@@ -36,6 +37,9 @@ void Camera::handle()
 
 void Camera::rotate()
 {
+    if(!cursorCapchure)
+        return;
+
     sf::Vector2i shift = sf::Mouse::getPosition(*window);
     sf::Vector2i center(window->getSize().x / 2, window->getSize().y / 2);
     shift -= center;
@@ -54,6 +58,7 @@ void Camera::rotate()
     front.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
 
     direction = front;
+
     if(mode == FPS)
         direction.y = 0;
 
@@ -98,6 +103,13 @@ void Camera::update()
 
     view = glm::lookAt(position, position + front, up);
     projection = glm::perspective(FOV, (float)window->getSize().x / window->getSize().y, 0.1f, 100.0f);
+}
+
+void Camera::changeCursorCapchure()
+{
+    cursorCapchure = !cursorCapchure;
+    window->setMouseCursorVisible(!cursorCapchure);
+    window->setMouseCursorGrabbed(cursorCapchure);
 }
 
 const glm::mat4& Camera::View()
